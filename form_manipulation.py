@@ -1,36 +1,62 @@
 import json
+from export_excel import generate_report
   
 # Opening JSON file
-f = open('sample.json')
-  
+f = open('answers.json')
+g = open('questions.json')
+
 # returns JSON object as 
 # a dictionary
 data = json.load(f)
-  
-question_list = {
-    "4b45ab37": "Tiempo de visita",
-    "1903a5b1": "In what year did the United States land a mission on the moon?",
-    "0f9b95c0": "Fecha de visita",
-    "7edf2a1b": "Ubicacion",
-    "34852e97": "Reporte",
-    "5cbe24de": "Estado de visita",
-}
-def get_data(data):
+questions = json.load(g)
+
+def get_questions():
+    items = questions['items']
+    all_questions = {}
+    for item in items:
+        questionItem = item.get('questionItem')
+        if questionItem != None:
+            question = questionItem.get('question').get('questionId')
+            all_questions[question] = item['title']
+    return all_questions
+
+
+def get_data():
+    question_list = get_questions()
     answer_list = data['responses']
     formated_answers = []
 
     for response in answer_list:
         answer_formated = {}
         answer_formated['email'] = response['respondentEmail']
+        time = response["createTime"][0:10]
+        location = ''
+        # print(response["createTime"][0:10], response['answers'][next(iter(response['answers']['textAnswers']))])
         for questionId, answers in response['answers'].items():
-            value = answers['textAnswers']['answers'][0]['value']
-            question = question_list.get(questionId)
-            answer_formated[question] = value
+            if 'textAnswers' in answers:
+                value = answers['textAnswers']['answers'][0]['value']
+                question = question_list.get(questionId)
+                if questionId == '6146a411':
+                    location = value
+                answer_formated[question] = value
         formated_answers.append(answer_formated)
+        answer_formated['id'] = f'{time}-{location}'
     
-    print(formated_answers)
+    return formated_answers
        
 
-    # print(answer_list)
 
-get_data(data)
+def get_ids(info):
+    return [x.get('id') for x in info]
+
+def find_element_by_id(arr, id):
+    for element in arr:
+        if element.get('id') == id:
+            return element
+    return None
+
+info = get_data()
+selected_report = find_element_by_id(info, '2023-05-31-Tbilisi')
+
+
+# generate_report(selected_report)

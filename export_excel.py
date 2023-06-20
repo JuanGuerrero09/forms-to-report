@@ -2,9 +2,9 @@ import xlsxwriter
 import os
 
 
-def generate_report(data, flow_type:str):
+def generate_report(data):
 
-    excel_name = 'ChannelReport' if flow_type == 'OpenFlow' else 'PipeReport'
+    excel_name = 'Report' 
 
     workbook = xlsxwriter.Workbook(f'{excel_name}.xlsx')
     worksheet = workbook.add_worksheet('Data')
@@ -50,63 +50,29 @@ def generate_report(data, flow_type:str):
     row = 1
     col = 1
 
-    worksheet.set_column('B:B', 20, cell_format=cells_format)
-    worksheet.set_column('C:C', 20, cell_format=cells_format)
-    worksheet.set_column('D:D', 25, cell_format=cells_format)
-    worksheet.merge_range('B1:D1', 'Channel Report',title_format)
-    worksheet.set_row(0, 40)
+    worksheet.set_column('B:B', 65, cell_format=cells_format)
+    worksheet.set_column('C:C', 25, cell_format=cells_format)
+    # worksheet.set_column('D:D', 25, cell_format=cells_format)
+    # worksheet.merge_range('B1:D1', 'Channel Report',title_format)
+    # worksheet.set_row(0, 40)
 
 
     row += 1
 
-    worksheet.merge_range(row, col, row, col + 2, 'Parameters',title_format)
-
-
-    row += 1
-
-    if flow_type == 'OpenFlow':
-        parameters = ['n', 'So', 'Q', 'b', 'y', 'z', 'D']
-        results = ['a', 'p','rh','tw','dh','zc', 'v', 'yc', 'Sc', 'channel_type', 'flow_status', 'f', ]
-    elif flow_type == 'PipeFlow':
-        parameters = ['method','Q', 'ID', 'L', 'e', 'C', 'eD']
-        results = ['Re', 'fr', 'flow_type', 'h', 'hf']
-
-    # definitions = frozenset(definitions.items())
 
     for key in data:
         initial_row = row
-        if key in parameters:
-            worksheet.write(row, col, key, bold)
-            worksheet.write(row, col + 1, trim_decimals(data[key]))
-            worksheet.write(row, col + 2, definitions[key], ital)
-            row += 1  
+        worksheet.write(row, col, key, bold)
+        worksheet.write(row, col + 1, data[key], ital)
+        row += 1  
         final_row = row
 
 
 
     row+=1
-    worksheet.merge_range(row, col, row, col + 2, 'Results',title_format)
-
-    row+=1
 
 
     # worksheet.insert_image('E2', './logo.png')
-
-    for key in data:
-        if key in results:
-            worksheet.write(row, col, key, bold)
-            worksheet.write(row, col + 1, trim_decimals(data[key]))
-            worksheet.write(row, col + 2, definitions[key], ital)
-            row += 1 
-
-    if flow_type == 'OpenFlow':
-        image = Image.open('channel.png')
-        image.resize((50, 50))
-        image.save('channel.png')
-        worksheet.set_row(row, 150)
-        worksheet.merge_range(row, col, row, col + 2, 'Results', cells_format)
-        worksheet.insert_image(row, col, 'channel.png', {'x_offset': 60, 'y_offset': 15})
-        row+=1
 
     worksheet.print_area(0,0, row, col + 1)
 
