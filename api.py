@@ -19,7 +19,6 @@ def get_raw_answers():
     # Prints the title of the sample form:
     form_id = '1b04zZwAB0l6MDE9_7d6lHO8bwxjc8kMBv6rWGXyGV9s'
     result = service.forms().responses().list(formId=form_id).execute()
-    print(result)
     # Serializing json
     json_object = json.dumps(result, indent=4)
     
@@ -43,7 +42,6 @@ def get_raw_questions():
     # Prints the title of the sample form:
     form_id = '1b04zZwAB0l6MDE9_7d6lHO8bwxjc8kMBv6rWGXyGV9s'
     result = service.forms().get(formId=form_id).execute()
-    print(result)
     # Serializing json
     json_object = json.dumps(result, indent=4)
     

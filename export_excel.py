@@ -1,5 +1,6 @@
 import xlsxwriter
 import os
+from drive_download import get_drive_creds, download_file
 
 
 def generate_report(data):
@@ -59,11 +60,37 @@ def generate_report(data):
 
     row += 1
 
+    creds = get_drive_creds()
 
-    for key in data:
+
+    section_index = 1
+    for section in data:
         initial_row = row
-        worksheet.write(row, col, key, bold)
-        worksheet.write(row, col + 1, data[key], ital)
+        # print(section)
+        if section == 'ID':
+            continue
+        worksheet.write(row, col, section, title_format)
+        row +=  2
+        for question in data[section]:
+            answer = data[section][question]
+            worksheet.write(row, col, question, bold)
+            if question.startswith('Picture') or question.startswith('Upload') :
+                img_index = 1
+                for img_id in answer:
+                    img = download_file(img_id, creds, section_index, img_index)
+                    # Tamaño deseado de la imagen en la celda (en píxeles)
+                    col_img = img_index + 2
+
+                    # Insertar la imagen en una celda específica
+                    worksheet.insert_image(row, col_img, img)
+                    worksheet.set_column(row, col_img, 45)
+                    img_index += 1  
+                section_index += 1  
+                row += 1    
+                continue
+            # print(question, answer)
+            worksheet.write(row, col + 1, answer, ital)
+            row += 1  
         row += 1  
         final_row = row
 
