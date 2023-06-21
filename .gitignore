@@ -9,6 +9,7 @@ share/
 *$py.class
 *.xlsx
 *.png
+*.jpg
 *.svg
 *.json
 
