@@ -34,10 +34,11 @@ def main(page: ft.Page):
     ## TODO ADD A BUTTON TO GET QUESTIONS AND ONE TO GET ANSWERS
 
     def create_report_button(e):
-        extra_text.value = f"Report created:  {dd.value}"
+        extra_text.value = f"Creating report..."
         data = get_formated_answers()
         visit = find_element_by_id(data, dd.value)
         generate_report(visit)
+        extra_text.value = f"Report created:  {dd.value}"
         page.update()
 
     def get_data_button(e):

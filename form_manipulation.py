@@ -33,13 +33,13 @@ def get_data():
         answer_formated = {}
         answer_formated['email'] = response['respondentEmail']
         time = response["createTime"][0:16]
-        location = ''
+        infraestructure = ''
         for questionId, answers in response['answers'].items():
             if 'textAnswers' in answers:
                 value = answers['textAnswers']['answers'][0]['value']
                 question = question_list.get(questionId)
-                if questionId == '6146a411':
-                    location = value
+                if questionId == '1c398b32':
+                    infraestructure = value
                 answer_formated[question] = value
             if 'fileUploadAnswers' in answers:
                 value = answers['fileUploadAnswers']['answers']
@@ -50,7 +50,7 @@ def get_data():
                     img_id_list.append(imgId)
                 answer_formated[question] = img_id_list
         formated_answers.append(answer_formated)
-        answer_formated['id'] = f'{time}-{location}'
+        answer_formated['id'] = f'{time}-{infraestructure}'
     return formated_answers
 
 

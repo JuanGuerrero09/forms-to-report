@@ -73,17 +73,22 @@ def generate_report(data):
         row +=  2
         for question in data[section]:
             answer = data[section][question]
+            isImage = question.startswith('Picture') or question.startswith('Upload')
+            question = 'Images' if isImage else question
             worksheet.write(row, col, question, bold)
-            if question.startswith('Picture') or question.startswith('Upload') :
+            if isImage :
+                row += 1
                 img_index = 1
+                max_size = 0
                 for img_id in answer:
-                    img = download_file(img_id, creds, section_index, img_index)
+                    img, size = download_file(img_id, creds, section_index, img_index)
                     # Tamaño deseado de la imagen en la celda (en píxeles)
-                    col_img = img_index + 2
-
+                    col_img = img_index
+                    max_size = size if size > max_size else max_size
                     # Insertar la imagen en una celda específica
                     worksheet.insert_image(row, col_img, img)
                     worksheet.set_column(row, col_img, 45)
+                    worksheet.set_row(row, 0.75 * max_size)
                     img_index += 1  
                 section_index += 1  
                 row += 1    

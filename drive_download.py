@@ -66,7 +66,7 @@ def download_file(id, creds, section_index, img_index):
     except HttpError as error:
         print(F'An error occurred: {error}')
 
-    return filename
+    return filename, image.size[1]
 
 
 if __name__ == '__main__':
