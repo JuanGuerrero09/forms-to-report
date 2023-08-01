@@ -1,7 +1,7 @@
 import json
 
-def get_questions():
-    g = open('questions.json')
+def get_questions(form_type):
+    g = open(f"{form_type}_questions.json")
     questions = json.load(g)
     items = questions['items']
     all_questions = {}
@@ -22,10 +22,10 @@ def get_questions():
     return questions_by_section, all_questions
 
 
-def get_data():
-    f = open('answers.json')
+def get_data(form_type):
+    f = open(f"{form_type}_answers.json")
     data = json.load(f)
-    question_list = get_questions()[1]
+    question_list = get_questions(form_type)[1]
     answer_list = data['responses']
     formated_answers = []
 
@@ -63,9 +63,9 @@ def find_element_by_id(arr, id):
             return element
     return None
 
-def get_formated_answers():
-    question_by_section, question_texts = get_questions()
-    data = get_data()
+def get_formated_answers(form_type):
+    question_by_section, question_texts = get_questions(form_type)
+    data = get_data(form_type)
     all_answers = []
     # Iterar sobre cada sección en el diccionario original
     for element in data:
